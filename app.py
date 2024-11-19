@@ -1,40 +1,60 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template, redirect, url_for
 from ultralytics import YOLO
-from PIL import Image
-import io
+import cv2
+import numpy as np
+import os
 
 app = Flask(__name__)
 
 # Load the trained YOLOv8 model
-model = YOLO('exp1_yolov8n_trained.onnx')  # Make sure the path to your model file is correct
+model = YOLO('exp1_yolov8n_trained.pt')  # Make sure the path to your trained model file is correct
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file provided'}), 400
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-    file = request.files['file']
-    img = Image.open(io.BytesIO(file.read()))
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # Check if the post request has the file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+            file.save(filepath)
+            return redirect(url_for('predict', filename=file.filename))
+    return render_template('index.html')
 
-    # Perform inference
-    results = model.predict(img)
+@app.route('/predict/<filename>')
+def predict(filename):
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    image = cv2.imread(filepath)
+    
+    # Get predictions from the model
+    results = model.predict(source=filepath, save=False)
+    
+    # Draw bounding boxes and labels on the image
+    for result in results:
+        if result.boxes is not None:
+            for box in result.boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                conf = box.conf[0]
+                cls = int(box.cls[0])
+                label = f'{model.names[cls]} {conf:.2f}'
+                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    
+    # Save the result image
+    result_filepath = os.path.join(UPLOAD_FOLDER, 'result_' + filename)
+    cv2.imwrite(result_filepath, image)
+    
+    return render_template('result.html', filename='result_' + filename)
 
-    # Extract predictions
-    predictions = results[0].boxes
-
-    # Convert predictions to a list of dictionaries
-    predictions_list = []
-    for box in predictions:
-        predictions_list.append({
-            'class': int(box.cls),
-            'confidence': float(box.conf),
-            'x1': float(box.xyxy[0]),
-            'y1': float(box.xyxy[1]),
-            'x2': float(box.xyxy[2]),
-            'y2': float(box.xyxy[3])
-        })
-
-    return jsonify(predictions_list)
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return redirect(url_for('static', filename=os.path.join(UPLOAD_FOLDER, filename)))
 
 if __name__ == '__main__':
     app.run(debug=True)

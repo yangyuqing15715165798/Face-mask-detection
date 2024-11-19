@@ -2,3 +2,4 @@ flask
 ultralytics
 pillow
 gunicorn
+opencv-python-headless
