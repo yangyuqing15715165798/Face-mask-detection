@@ -1,0 +1,6 @@
+
+train: datasets/train/images
+test: datasets/test/images
+val: datasets/val/images
+nc: 3  # number of classes (with_mask, without_mask, mask_weared_incorrect)
+names: ['with_mask', 'without_mask', 'mask_weared_incorrect']
