@@ -6,7 +6,7 @@ import io
 app = Flask(__name__)
 
 # Load the trained YOLOv8 model
-model = YOLO('yolov8n_trained.onnx')  # Make sure the path to your model file is correct
+model = YOLO('exp1_yolov8n_trained.onnx')  # Make sure the path to your model file is correct
 
 @app.route('/predict', methods=['POST'])
 def predict():
