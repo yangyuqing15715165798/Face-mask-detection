@@ -4,7 +4,8 @@ import cv2
 from ultralytics import YOLO
 
 # Load the trained YOLOv8 model
-model = YOLO('trained_weights/yolov8n_trained.onnx')  # Make sure the path to your model file is correct
+model = YOLO('exp1_yolov8n_trained.pt')  # Make sure the path to your model file is correct
+
 
 # Initialize the webcam
 cap = cv2.VideoCapture(0)
