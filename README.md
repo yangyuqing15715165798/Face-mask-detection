@@ -48,3 +48,5 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+Face Mask Detection © 2024 by Supriya Rani is licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
