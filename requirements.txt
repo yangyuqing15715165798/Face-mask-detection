@@ -1,7 +1,2 @@
-flask
-ultralytics
-pillow
-gunicorn
-opencv-python-headless
-lxml 
-scikit-learn
+Flask==2.3.2
+gunicorn==20.1.0
