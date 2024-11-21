@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Load the trained YOLOv8 model
-model = YOLO('exp1_yolov8n_trained.pt')  # Make sure the path to your trained model file is correct
+model = YOLO('trained_weights/exp1_yolov8n_trained.pt')  # Make sure the path to your trained model file is correct
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
