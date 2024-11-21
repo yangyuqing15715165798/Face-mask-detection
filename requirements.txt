@@ -1,5 +1,8 @@
 Flask==2.3.2
 gunicorn==20.1.0
-torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
-torchvision==0.15.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
-ultralytics==8.0.0
+opencv-python-headless==4.5.5.64
+numpy==1.21.6
+torch>=1.8.0
+torchvision>=0.9.0
+tqdm>-4.66.3
+ultralytics>=8.2.34
