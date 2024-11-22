@@ -8,7 +8,7 @@ import onnxruntime as ort
 app = Flask(__name__)
 
 # Load the ONNX model
-ort_session = ort.InferenceSession('trained_weights/exp1_yolov8n_trained.onnx')
+ort_session = ort.InferenceSession('SupriyaRani/Face-mask-detection/trained_weights/exp1_yolov8n_trained.onnx')
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
