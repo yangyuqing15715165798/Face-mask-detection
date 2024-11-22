@@ -63,7 +63,7 @@ def predict(filename):
         # label = f'{int(cls)} {float(conf):.2f}' 
         # Adjust coordinates back to original image size
         # Convert coordinates to integers
-        x1, y1, x2, y2 = map(lambda x: int(x.item()), [x1, y1, x2, y2])
+        x1, y1, x2, y2 = map(lambda x: int(x[:4].item()), [x1, y1, x2, y2])
 
         # Ensure coordinates are in the correct order
         if x1 > x2:
