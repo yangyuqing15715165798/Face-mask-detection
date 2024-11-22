@@ -60,10 +60,18 @@ def predict(filename):
     font = ImageFont.load_default()
     for result in ort_outs[0]:
         x1, y1, x2, y2, conf, cls = result[:6]
-        print(f'x1: {x1}, y1: {y1}, x2: {x2}, y2: {y2}')  
-        x1, y1, x2, y2 = map(int, [x1, y1, x2, y2])  
         label = f'{int(cls)} {float(conf):.2f}' 
         # Adjust coordinates back to original image size
+        # Convert coordinates to integers
+        x1, y1, x2, y2 = map(lambda x: int(x.item()), [x1, y1, x2, y2])
+
+        # Ensure coordinates are in the correct order
+        if x1 > x2:
+            x1, x2 = x2, x1
+        if y1 > y2:
+            y1, y2 = y2, y1
+
+        # Scale coordinates back to original image size
         x1 = int(x1 * original_size[0] / 640)
         y1 = int(y1 * original_size[1] / 640)
         x2 = int(x2 * original_size[0] / 640)
