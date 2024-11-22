@@ -2,5 +2,4 @@ Flask==2.3.2
 gunicorn==20.1.0
 opencv-python-headless==4.5.5.64
 numpy==1.21.6
-tensorflow-cpu==2.5.0
-ultralytics
+torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
