@@ -1,14 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Upload Image</title>
-  </head>
-  <body>
-    <h1>Upload an Image for Prediction</h1>
-    <form method="post" enctype="multipart/form-data">
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Prediction</title>
+</head>
+<body>
+    <h1>Live Prediction</h1>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+</body>
 </html>
