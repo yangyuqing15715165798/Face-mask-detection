@@ -45,11 +45,15 @@ def predict(filename):
     ort_inputs = {ort_session.get_inputs()[0].name: input_image}
     ort_outs = ort_session.run(None, ort_inputs)
 
+    # Print the model output shape for debugging
+    print("Model output shape:", ort_outs[0].shape)
+
     # Process the results
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
     for result in ort_outs[0]:
-        x1, y1, x2, y2, conf, cls = result
+        print(result)  # Print each result for debugging
+        x1, y1, x2, y2, conf, cls = result[:6]  # Adjust this based on the actual output structure
         label = f'{int(cls)} {conf:.2f}'
         draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
         draw.text((x1, y1 - 10), label, fill="green", font=font)
