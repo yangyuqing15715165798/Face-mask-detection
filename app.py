@@ -50,7 +50,8 @@ def predict(filename):
     font = ImageFont.load_default()
     for result in ort_outs[0]:
         x1, y1, x2, y2, conf, cls = result[:6]
-        x1, y1, x2, y2 = [int(x) for x in [x1, y1, x2, y2]]  # Ensure coordinates are integers
+        print(f'x1: {x1}, y1: {y1}, x2: {x2}, y2: {y2}')  # Debug print
+        x1, y1, x2, y2 = map(int, [x1, y1, x2, y2])  # Ensure coordinates are integers
         label = f'{int(cls)} {float(conf):.2f}'  # Extract single values correctly
         draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
         draw.text((x1, y1 - 10), label, fill="green", font=font)
@@ -60,6 +61,7 @@ def predict(filename):
     image.save(io_buf, format='JPEG')
     io_buf.seek(0)
     return send_file(io_buf, mimetype='image/jpeg')
+
 
 
 def generate_frames():
