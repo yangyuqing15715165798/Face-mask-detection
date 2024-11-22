@@ -44,6 +44,10 @@
         .button:hover {
             background-color: #0056b3;
         }
+        .messages {
+            color: red;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -54,6 +58,20 @@
                 <input type="file" name="file">
                 <button type="submit" class="button">Upload File</button>
             </form>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="messages">
+                  {% for message in messages %}
+                    <p>{{ message }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <p>Allowed file types: png, jpg, jpeg</p>
+        </div>
+        
+        <div class="sec">
+            <a href="{{ url_for('live') }}" class="button">Live Prediction</a>
         </div>
     </div>
 </body>
