@@ -1,8 +1,10 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_file
 from ultralytics import YOLO
 import cv2
 import numpy as np
 import os
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -46,16 +48,10 @@ def predict(filename):
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
     
-    # Save the result image
-    result_filepath = os.path.join(UPLOAD_FOLDER, 'result_' + filename)
-    cv2.imwrite(result_filepath, image)
-    
-    return render_template('result.html', filename='result_' + filename)
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return redirect(url_for('static', filename=os.path.join(UPLOAD_FOLDER, filename)))
+    # Convert the image to a format that can be sent as a response
+    _, buffer = cv2.imencode('.jpg', image)
+    io_buf = BytesIO(buffer)
+    return send_file(io_buf, mimetype='image/jpeg')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
