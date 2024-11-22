@@ -46,11 +46,12 @@ def predict(filename):
     ort_outs = ort_session.run(None, ort_inputs)
 
     # Process the results
+    # Process the results
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
     for result in ort_outs[0]:
-        x1, y1, x2, y2, conf, cls = result[:6]  # Adjust this based on the actual output structure
-        label = f'{int(cls)} {float(conf):.2f}'  # Convert to int and float directly
+        x1, y1, x2, y2, conf, cls = result[:6]
+        label = f'{int(cls.item())} {float(conf.item()):.2f}'  # Use .item() to extract single values
         draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
         draw.text((x1, y1 - 10), label, fill="green", font=font)
 
@@ -62,7 +63,7 @@ def predict(filename):
 
 def generate_frames():
     while True:
-        # Capture frame-by-frame
+        # Capture frame-by-frame using ImageGrab
         frame = ImageGrab.grab()
         frame = frame.resize((640, 640))
         frame_np = np.array(frame)
@@ -81,7 +82,7 @@ def generate_frames():
         font = ImageFont.load_default()
         for result in ort_outs[0]:
             x1, y1, x2, y2, conf, cls = result[:6]
-            label = f'{int(cls)} {float(conf):.2f}'
+            label = f'{int(cls.item())} {float(conf.item()):.2f}'
             draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
             draw.text((x1, y1 - 10), label, fill="green", font=font)
 
@@ -92,6 +93,7 @@ def generate_frames():
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
+
 
 @app.route('/video_feed')
 def video_feed():
