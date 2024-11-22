@@ -50,7 +50,7 @@ def predict(filename):
     font = ImageFont.load_default()
     for result in ort_outs[0]:
         x1, y1, x2, y2, conf, cls = result[:6]  # Adjust this based on the actual output structure
-        label = f'{int(cls.item())} {conf.item():.2f}'  # Use .item() to extract single values
+        label = f'{int(cls)} {float(conf):.2f}'  # Convert to int and float directly
         draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
         draw.text((x1, y1 - 10), label, fill="green", font=font)
 
