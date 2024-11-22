@@ -10,7 +10,6 @@ app = Flask(__name__)
 # Load the ONNX model
 ort_session = ort.InferenceSession('trained_weights/exp1_yolov8n_trained.onnx')
 
-
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -32,6 +31,9 @@ def upload_file():
 def predict(filename):
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     image = Image.open(filepath)
+    
+    # Resize the image to 640x640 before inference
+    image = image.resize((640, 640))
     image_np = np.array(image)
 
     # Preprocess the image
