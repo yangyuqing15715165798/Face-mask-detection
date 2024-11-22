@@ -1,14 +1,14 @@
 from flask import Flask, request, render_template, redirect, url_for, send_file
-from ultralytics import YOLO
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import os
 from io import BytesIO
+import onnxruntime as ort
 
 app = Flask(__name__)
 
-# Load the trained YOLOv8 model
-model = YOLO('trained_weights/exp1_yolov8n_trained.pt')  # Make sure the path to your trained model file is correct
+# Load the ONNX model
+ort_session = ort.InferenceSession('trained_weights/exp1_yolov8n_trained.onnx')
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -16,7 +16,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # Check if the post request has the file part
         if 'file' not in request.files:
             return redirect(request.url)
         file = request.files['file']
@@ -32,23 +31,26 @@ def upload_file():
 def predict(filename):
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     image = Image.open(filepath)
-    
-    # Get predictions from the model
-    results = model.predict(source=filepath, save=False)
-    
-    # Draw bounding boxes and labels on the image
+    image_np = np.array(image)
+
+    # Preprocess the image
+    input_image = image_np.astype(np.float32)
+    input_image = np.transpose(input_image, (2, 0, 1))  # Convert to CHW format
+    input_image = np.expand_dims(input_image, axis=0)  # Add batch dimension
+
+    # Run inference
+    ort_inputs = {ort_session.get_inputs()[0].name: input_image}
+    ort_outs = ort_session.run(None, ort_inputs)
+
+    # Process the results
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
-    for result in results:
-        if result.boxes is not None:
-            for box in result.boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = box.conf[0]
-                cls = int(box.cls[0])
-                label = f'{model.names[cls]} {conf:.2f}'
-                draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
-                draw.text((x1, y1 - 10), label, fill="green", font=font)
-    
+    for result in ort_outs[0]:
+        x1, y1, x2, y2, conf, cls = result
+        label = f'{int(cls)} {conf:.2f}'
+        draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
+        draw.text((x1, y1 - 10), label, fill="green", font=font)
+
     # Convert the image to a format that can be sent as a response
     io_buf = BytesIO()
     image.save(io_buf, format='JPEG')
