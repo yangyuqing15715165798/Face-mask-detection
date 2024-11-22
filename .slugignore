@@ -8,3 +8,6 @@ tests/
 docs/
 .datasets
 .run
+*.onnx
+*.ipynb
+*.md
