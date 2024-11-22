@@ -1,2 +1,9 @@
-libgl1
+# Aptfile
+libgl1-mesa-glx
 libglib2.0-0
+
+# Add custom source for libgl1-mesa-glx
+echo 'deb http://archive.ubuntu.com/ubuntu/ focal main universe' > /etc/apt/sources.list.d/focal.list
+
+# Fix permissions
+echo 'Dpkg::Post-Invoke { "chmod -R 755 /var/cache/apt/archives/partial"; };' > /etc/apt/apt.conf.d/99fixpermissions
