@@ -1,2 +1,6 @@
+# Aptfile
 libgl1-mesa-glx
 libglib2.0-0
+
+# Enable universe repository
+echo 'deb http://archive.ubuntu.com/ubuntu/ $(lsb_release -sc) universe' > /etc/apt/sources.list.d/universe.list
