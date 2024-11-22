@@ -60,7 +60,7 @@ def predict(filename):
     font = ImageFont.load_default()
     for result in ort_outs[0]:
         x1, y1, x2, y2, conf, cls = result[:6]
-        label = f'{int(cls)} {float(conf):.2f}' 
+        # label = f'{int(cls)} {float(conf):.2f}' 
         # Adjust coordinates back to original image size
         # Convert coordinates to integers
         x1, y1, x2, y2 = map(lambda x: int(x.item()), [x1, y1, x2, y2])
@@ -77,7 +77,7 @@ def predict(filename):
         x2 = int(x2 * original_size[0] / 640)
         y2 = int(y2 * original_size[1] / 640)
         draw.rectangle([x1, y1, x2, y2], outline="green", width=2)
-        draw.text((x1, y1 - 10), label, fill="green", font=font)
+        # draw.text((x1, y1 - 10), label, fill="green", font=font)
 
     # Convert the image to a format that can be sent as a response
     io_buf = BytesIO()
