@@ -19,6 +19,13 @@
         }
         h1 {
             color: #333;
+            width: 100%;
+        }
+        .sec {
+            color: #333;
+            width: 100%;
+            min-height: 50px;
+            background-color: beige;
         }
         img {
             border: 2px solid #333;
@@ -42,11 +49,15 @@
 <body>
     <div class="container">
         <h1>Face Mask Detection</h1>
-        <form action="/" method="post" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <button type="submit" class="button">Upload File</button>
-        </form>
-        <a href="{{ url_for('live') }}" class="button">Live Prediction</a>
+        <div class="sec">
+            <form action="/" method="post" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button type="submit" class="button">Upload File</button>
+            </form>
+        </div>
+        <div class="sec">
+            <a href="{{ url_for('live') }}" class="button">Live Prediction</a>
+        </div>
     </div>
 </body>
 </html>
