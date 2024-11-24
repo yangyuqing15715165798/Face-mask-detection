@@ -1,4 +1,4 @@
-# Face Mask Detection
+# Face Mask Detection using Yolov8
 
 This repository contains the implementation of a Face Mask Detection system using YOLOv8, originally sourced from Kaggle. The project includes scripts for training, validation, and live predictions.
 
