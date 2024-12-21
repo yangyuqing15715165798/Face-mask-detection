@@ -10,3 +10,7 @@ __pycache__/
 .env
 .venv
 .datasets
+.conda
+.ultralytics
+.yolov8s.pt
+.8.2.95
