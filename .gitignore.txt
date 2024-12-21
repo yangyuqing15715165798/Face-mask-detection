@@ -11,6 +11,6 @@ __pycache__/
 .venv
 .datasets
 .conda
-.ultralytics
+.mask-detection-project
 .yolov8s.pt
 .8.2.95
